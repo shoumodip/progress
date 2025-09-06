@@ -1,0 +1,124 @@
+* {
+    font-size: 1.1rem;
+    font-family: No Continue;
+
+    color: #FFFFFF;
+    background-color: #181818;
+}
+
+h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: normal;
+}
+
+h2 {
+    margin: 0;
+    font-size: 1.0rem;
+    font-weight: normal;
+    color: #FFB84D;
+}
+
+svg {
+    background-color: transparent !important;
+}
+
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+body, .vertical {
+    gap: 0.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.boxed {
+    cursor: default;
+    padding: 0.6rem;
+
+    border: 1px solid #606060;
+    border-radius: 0.3rem;
+}
+
+.center {
+    align-items: center;
+    justify-content: center;
+}
+
+.header {
+    background-color: #303030;
+}
+
+.header h1, .header h2 {
+    display: flex;
+    background-color: #303030;
+}
+
+.header div {
+    gap: 0.1rem;
+    padding: 0.5rem;
+    background-color: #303030;
+}
+
+.header button {
+    border: 0px;
+    border-radius: 50%;
+    width: 3.5rem;
+    height: 3.5rem;
+}
+
+.floating {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    width: 4.0rem;
+    height: 4.0rem;
+    transform: translateX(-50%);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.floating:hover {
+    opacity: 0.7;
+}
+
+.padding {
+    padding: 0.6rem;
+}
+
+.stretch {
+    width: 100%;
+}
+
+.horizontal {
+    gap: 0.5rem;
+    display: flex;
+}
+
+.sidePadding {
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+}
+
+select {
+    appearance: none;
+}
+
+button:hover {
+    background-color: #404040;
+}
+
+input, button, select {
+    padding: 0.6rem;
+    outline: none;
+
+    border: 1px solid #606060;
+    border-radius: 0.3rem;
+
+    background-color: #303030;
+}
