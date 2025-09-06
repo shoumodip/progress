@@ -4,11 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "load": "npx tsc && cordova run android",
+    "build": "npx tsc && cordova build android",
+    "setup": "npm install && cordova platform add android"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "cordova": "^12.0.0",
+    "cordova-android": "^14.0.1",
     "typescript": "^5.9.2"
+  },
+  "cordova": {
+    "platforms": [
+      "android"
+    ]
   }
 }
