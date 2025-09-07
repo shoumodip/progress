@@ -241,6 +241,8 @@ function drawActivityPage(activity: Activity) {
             )
         )
     )
+
+    window.scrollTo(0, document.body.scrollHeight)
 }
 
 function drawEditActivityPage(activity?: Activity) {
