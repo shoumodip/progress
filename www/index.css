@@ -11,6 +11,11 @@ h1 {
     display: flex;
     font-size: 1.4rem;
     font-weight: normal;
+
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 h2 {
@@ -27,6 +32,7 @@ svg {
 html, body {
     margin: 0;
     height: 100%;
+    user-select: none;
 }
 
 body, .vertical {
@@ -53,12 +59,20 @@ body, .vertical {
 }
 
 .header {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: flex-start;
     background-color: #303030;
 }
 
-.header h1, .header h2 {
-    display: flex;
+.header h1 {
+    left: 50%;
+    position: absolute;
+    transform: translateX(-50%);
     background-color: #303030;
+
+    max-width: 80%;
 }
 
 .header div {
@@ -114,4 +128,8 @@ input, button {
     border-radius: 0.3rem;
 
     background-color: #303030;
+}
+
+input {
+    user-select: text;
 }

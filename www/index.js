@@ -60,6 +60,11 @@ function newHorizontal(...children) {
 function newPaddedPage(...children) {
     return setClass(newVertical(...children), "padding");
 }
+function newHeaderPanel(...children) {
+    const div = setClass(document.createElement("div"), "header");
+    div.replaceChildren(...children.filter((e) => e !== undefined));
+    return div;
+}
 function newFloatingButton(logo, click, color) {
     const button = setClass(newButton(logo, click, true), "floating");
     button.style.backgroundColor = color;
@@ -155,7 +160,7 @@ function drawEditLogItemPage(activity, item) {
     }, true))));
 }
 function drawActivityPage(activity) {
-    document.body.replaceChildren(setClass(newHorizontal(newButton(renderSymbol(backSymbol, 24, 1.3), drawMainPage, true), setClass(newHeader(activity.name, 1), "vcenter", "stretch")), "header"), newPaddedPage(newVertical(...activity.log.map((item, index) => renderLogItem(activity, item, index)), newFloatingButton(renderSymbol(plusSymbol, 24, 2.5), () => drawEditLogItemPage(activity), "#1F6FB1"))));
+    document.body.replaceChildren(newHeaderPanel(newButton(renderSymbol(backSymbol, 24, 1.3), drawMainPage, true), setClass(newHeader(activity.name, 1), "vcenter")), newPaddedPage(newVertical(...activity.log.map((item, index) => renderLogItem(activity, item, index)), newFloatingButton(renderSymbol(plusSymbol, 24, 2.5), () => drawEditLogItemPage(activity), "#1F6FB1"))));
 }
 function drawEditActivityPage(activity) {
     const input = newInput("Activity Name", activity ? activity.name : "");

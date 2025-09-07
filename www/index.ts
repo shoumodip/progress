@@ -61,6 +61,12 @@ function newPaddedPage(...children: (Node | undefined)[]): HTMLDivElement {
     return setClass(newVertical(...children), "padding")
 }
 
+function newHeaderPanel(...children: (Node | undefined)[]): HTMLDivElement {
+    const div = setClass(document.createElement("div"), "header")
+    div.replaceChildren(...children.filter((e) => e !== undefined))
+    return div
+}
+
 function newFloatingButton(logo: SVGSVGElement, click: (this: GlobalEventHandlers, ev: MouseEvent) => any, color: string): HTMLButtonElement {
     const button = setClass(newButton(logo, click, true), "floating")
     button.style.backgroundColor = color
@@ -224,16 +230,9 @@ function drawEditLogItemPage(activity: Activity, item?: LogItem) {
 
 function drawActivityPage(activity: Activity) {
     document.body.replaceChildren(
-        setClass(
-            newHorizontal(
-                newButton(renderSymbol(backSymbol, 24, 1.3), drawMainPage, true),
-                setClass(
-                    newHeader(activity.name, 1),
-                    "vcenter",
-                    "stretch"
-                )
-            ),
-            "header"
+        newHeaderPanel(
+            newButton(renderSymbol(backSymbol, 24, 1.3), drawMainPage, true),
+            setClass(newHeader(activity.name, 1), "vcenter")
         ),
         newPaddedPage(
             newVertical(
