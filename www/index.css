@@ -59,11 +59,15 @@ body, .vertical {
 }
 
 .header {
+    top: 0;
     display: flex;
-    position: relative;
+    z-index: 1000;
+    position: sticky;
     align-items: center;
     justify-content: flex-start;
     background-color: #303030;
+
+    margin-bottom: -0.3rem;
 }
 
 .header h1 {
