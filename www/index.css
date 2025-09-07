@@ -8,6 +8,7 @@
 
 h1 {
     margin: 0;
+    display: flex;
     font-size: 1.4rem;
     font-weight: normal;
 }
@@ -47,6 +48,10 @@ body, .vertical {
     justify-content: center;
 }
 
+.vcenter {
+    align-items: center;
+}
+
 .header {
     background-color: #303030;
 }
@@ -64,9 +69,6 @@ body, .vertical {
 
 .header button {
     border: 0px;
-    border-radius: 50%;
-    width: 3.5rem;
-    height: 3.5rem;
 }
 
 .floating {
@@ -100,20 +102,11 @@ body, .vertical {
     display: flex;
 }
 
-.sidePadding {
-    padding-left: 0.6rem;
-    padding-right: 0.6rem;
-}
-
-select {
-    appearance: none;
-}
-
 button:hover {
     background-color: #404040;
 }
 
-input, button, select {
+input, button {
     padding: 0.6rem;
     outline: none;
 

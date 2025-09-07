@@ -73,7 +73,6 @@ interface LogItem {
 }
 
 interface Activity {
-    max: number
     log: LogItem[]
     name: string
 }
@@ -99,11 +98,9 @@ function loadData() {
             continue
         }
 
-        const parts = it.split(" ", 2)
         let activity: Activity = {
-            max: Number(parts[0]),
             log: [],
-            name: parts[1]
+            name: it
         }
 
         while (i < save.length) {
@@ -126,7 +123,7 @@ function loadData() {
 function saveData() {
     let data = ""
     for (const activity of activities) {
-        data += `${activity.max} ${activity.name}\n`
+        data += `${activity.name}\n`
         for (const item of activity.log) {
             data += `${item.value} ${item.date}\n`
         }
@@ -178,10 +175,8 @@ function renderActivity(activity: Activity, index: number): HTMLElement {
         newHorizontal(
             setClick(
                 setClass(
-                    newVertical(
-                        newHeader(activity.name, 1),
-                        newHeader(`Max: ${activity.max}`, 2)
-                    ),
+                    newHeader(activity.name, 1),
+                    "vcenter",
                     "stretch"
                 ),
                 () => drawActivityPage(activity)
@@ -219,7 +214,6 @@ function drawEditLogItemPage(activity: Activity, item?: LogItem) {
                         })
                     }
 
-                    activity.max = Math.max(...activity.log.map((item) => item.value))
                     saveData()
                     drawActivityPage(activity)
                 }, true)
@@ -234,11 +228,8 @@ function drawActivityPage(activity: Activity) {
             newHorizontal(
                 newButton(renderSymbol(backSymbol, 24, 1.3), drawMainPage, true),
                 setClass(
-                    newVertical(
-                        newHeader(activity.name, 1),
-                        newHeader(`Max: ${activity.max}`, 2)
-                    ),
-                    "center",
+                    newHeader(activity.name, 1),
+                    "vcenter",
                     "stretch"
                 )
             ),
@@ -270,7 +261,6 @@ function drawEditActivityPage(activity?: Activity) {
                     } else {
                         activities.push({
                             name: input.value,
-                            max: 0,
                             log: []
                         })
                     }
@@ -296,13 +286,15 @@ window.onload = async () => {
     activities = []
 
     backSymbol = document.createElementNS("http://www.w3.org/2000/svg", "path")
-    backSymbol.setAttribute("stroke", "currentColor")
+    backSymbol.setAttribute("fill", "none")
+    backSymbol.setAttribute("stroke", "#ffffff")
     backSymbol.setAttribute("stroke-linecap", "round")
     backSymbol.setAttribute("stroke-linejoin", "round")
     backSymbol.setAttribute("stroke-width", "2")
     backSymbol.setAttribute("d", "m15 19-7-7 7-7")
 
     doneSymbol = document.createElementNS("http://www.w3.org/2000/svg", "path")
+    backSymbol.setAttribute("fill", "none")
     doneSymbol.setAttribute("stroke", "#1fb141")
     doneSymbol.setAttribute("stroke-linecap", "round")
     doneSymbol.setAttribute("stroke-linejoin", "round")

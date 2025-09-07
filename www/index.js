@@ -82,11 +82,9 @@ function loadData() {
         if (it === "") {
             continue;
         }
-        const parts = it.split(" ", 2);
         let activity = {
-            max: Number(parts[0]),
             log: [],
-            name: parts[1]
+            name: it
         };
         while (i < save.length) {
             const it = save[i++];
@@ -105,7 +103,7 @@ function loadData() {
 function saveData() {
     let data = "";
     for (const activity of activities) {
-        data += `${activity.max} ${activity.name}\n`;
+        data += `${activity.name}\n`;
         for (const item of activity.log) {
             data += `${item.value} ${item.date}\n`;
         }
@@ -130,7 +128,7 @@ function renderLogItem(activity, item, index) {
     }, true), isToday)), "boxed");
 }
 function renderActivity(activity, index) {
-    return setClass(newHorizontal(setClick(setClass(newVertical(newHeader(activity.name, 1), newHeader(`Max: ${activity.max}`, 2)), "stretch"), () => drawActivityPage(activity)), newButton(renderSymbol(editSymbol, 50, 1.3), () => drawEditActivityPage(activity), true), newButton(renderSymbol(deleteSymbol, 26, 1.3), () => {
+    return setClass(newHorizontal(setClick(setClass(newHeader(activity.name, 1), "vcenter", "stretch"), () => drawActivityPage(activity)), newButton(renderSymbol(editSymbol, 50, 1.3), () => drawEditActivityPage(activity), true), newButton(renderSymbol(deleteSymbol, 26, 1.3), () => {
         activities.splice(index, 1);
         saveData();
         drawMainPage();
@@ -152,13 +150,12 @@ function drawEditLogItemPage(activity, item) {
                 value: value
             });
         }
-        activity.max = Math.max(...activity.log.map((item) => item.value));
         saveData();
         drawActivityPage(activity);
     }, true))));
 }
 function drawActivityPage(activity) {
-    document.body.replaceChildren(setClass(newHorizontal(newButton(renderSymbol(backSymbol, 24, 1.3), drawMainPage, true), setClass(newVertical(newHeader(activity.name, 1), newHeader(`Max: ${activity.max}`, 2)), "center", "stretch")), "header"), newPaddedPage(newVertical(...activity.log.map((item, index) => renderLogItem(activity, item, index)), newFloatingButton(renderSymbol(plusSymbol, 24, 2.5), () => drawEditLogItemPage(activity), "#1F6FB1"))));
+    document.body.replaceChildren(setClass(newHorizontal(newButton(renderSymbol(backSymbol, 24, 1.3), drawMainPage, true), setClass(newHeader(activity.name, 1), "vcenter", "stretch")), "header"), newPaddedPage(newVertical(...activity.log.map((item, index) => renderLogItem(activity, item, index)), newFloatingButton(renderSymbol(plusSymbol, 24, 2.5), () => drawEditLogItemPage(activity), "#1F6FB1"))));
 }
 function drawEditActivityPage(activity) {
     const input = newInput("Activity Name", activity ? activity.name : "");
@@ -172,7 +169,6 @@ function drawEditActivityPage(activity) {
         else {
             activities.push({
                 name: input.value,
-                max: 0,
                 log: []
             });
         }
@@ -186,12 +182,14 @@ function drawMainPage() {
 window.onload = () => __awaiter(void 0, void 0, void 0, function* () {
     activities = [];
     backSymbol = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    backSymbol.setAttribute("stroke", "currentColor");
+    backSymbol.setAttribute("fill", "none");
+    backSymbol.setAttribute("stroke", "#ffffff");
     backSymbol.setAttribute("stroke-linecap", "round");
     backSymbol.setAttribute("stroke-linejoin", "round");
     backSymbol.setAttribute("stroke-width", "2");
     backSymbol.setAttribute("d", "m15 19-7-7 7-7");
     doneSymbol = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    backSymbol.setAttribute("fill", "none");
     doneSymbol.setAttribute("stroke", "#1fb141");
     doneSymbol.setAttribute("stroke-linecap", "round");
     doneSymbol.setAttribute("stroke-linejoin", "round");
