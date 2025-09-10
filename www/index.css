@@ -120,6 +120,10 @@ body, .vertical {
     display: flex;
 }
 
+.activity.dragging {
+    border: 1px solid #1fb141;
+}
+
 button:hover {
     background-color: #404040;
 }

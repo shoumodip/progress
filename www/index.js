@@ -12,10 +12,6 @@ function setClass(element, ...names) {
     element.classList.add(...names);
     return element;
 }
-function setClick(element, callback) {
-    element.onclick = callback;
-    return element;
-}
 function domMaybe(element, cond) {
     if (cond) {
         return element;
@@ -133,11 +129,13 @@ function renderLogItem(activity, item, index) {
     }, true), isToday)), "boxed");
 }
 function renderActivity(activity, index) {
-    return setClass(newHorizontal(setClick(setClass(newHeader(activity.name, 1), "vcenter", "stretch"), () => drawActivityPage(activity)), newButton(renderSymbol(editSymbol, 50, 1.3), () => drawEditActivityPage(activity), true), newButton(renderSymbol(deleteSymbol, 26, 1.3), () => {
+    const result = setClass(newHorizontal(setClass(newHeader(activity.name, 1), "vcenter", "stretch"), newButton(renderSymbol(editSymbol, 50, 1.3), () => drawEditActivityPage(activity), true), newButton(renderSymbol(deleteSymbol, 26, 1.3), () => {
         activities.splice(index, 1);
         saveData();
         drawMainPage();
-    }, true)), "boxed");
+    }, true)), "boxed", "activity");
+    result.dataset.index = String(index);
+    return result;
 }
 function drawEditLogItemPage(activity, item) {
     const input = newInput("Log Value", item ? String(item.value) : "", "number");
@@ -183,7 +181,102 @@ function drawEditActivityPage(activity) {
     }, true))));
 }
 function drawMainPage() {
-    document.body.replaceChildren(newPaddedPage(...activities.map(renderActivity), newFloatingButton(renderSymbol(plusSymbol, 24, 2.5), () => drawEditActivityPage(), "#1fb141")));
+    const list = newVertical(...activities.map(renderActivity));
+    let startY = 0;
+    let currentY = 0;
+    let draggedItem = null;
+    let isDragging = false;
+    let isPointerDown = false;
+    function getPointerY(e) {
+        return (e instanceof TouchEvent) ? e.touches[0].clientY : e.clientY;
+    }
+    function onPointerDown(e) {
+        const target = e.target.closest(".activity");
+        if (!target) {
+            return;
+        }
+        isDragging = false;
+        isPointerDown = true;
+        draggedItem = null;
+        setTimeout(() => {
+            if (!isPointerDown) {
+                return;
+            }
+            startY = getPointerY(e);
+            currentY = startY;
+            isDragging = false;
+            draggedItem = target;
+            draggedItem.classList.add("dragging");
+            document.addEventListener("mousemove", onPointerMove);
+            document.addEventListener("touchmove", onPointerMove, { passive: false });
+        }, 300);
+        document.addEventListener("mouseup", onPointerUp);
+        document.addEventListener("touchend", onPointerUp);
+    }
+    function onPointerMove(e) {
+        if (!draggedItem) {
+            return;
+        }
+        const y = getPointerY(e);
+        const deltaY = y - startY;
+        if (!isDragging && Math.abs(deltaY) > 10) {
+            isDragging = true;
+            draggedItem.classList.add("dragging");
+        }
+        if (isDragging) {
+            e.preventDefault();
+            const afterElement = getDragAfterElement(list, y);
+            if (afterElement === null) {
+                list.appendChild(draggedItem);
+            }
+            else {
+                list.insertBefore(draggedItem, afterElement);
+            }
+        }
+        currentY = y;
+    }
+    function onPointerUp(e) {
+        document.removeEventListener("mousemove", onPointerMove);
+        document.removeEventListener("touchmove", onPointerMove);
+        document.removeEventListener("mouseup", onPointerUp);
+        document.removeEventListener("touchend", onPointerUp);
+        isPointerDown = false;
+        if (draggedItem) {
+            draggedItem.classList.remove("dragging");
+            draggedItem = null;
+        }
+        if (isDragging) {
+            isDragging = false;
+            const children = list.childNodes;
+            const newActivities = [];
+            for (const it of children) {
+                newActivities.push(activities[Number(it.dataset.index)]);
+                it.dataset.index = String(newActivities.length - 1);
+            }
+            activities = newActivities;
+            saveData();
+            return;
+        }
+        const target = e.target.closest(".activity");
+        if (!target) {
+            return;
+        }
+        drawActivityPage(activities[Number(target.dataset.index)]);
+    }
+    function getDragAfterElement(container, y) {
+        const items = [...container.querySelectorAll(".activity:not(.dragging)")];
+        return items.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            if (offset < 0 && offset > closest.offset) {
+                return { offset, element: child };
+            }
+            return closest;
+        }, { offset: Number.NEGATIVE_INFINITY, element: null }).element;
+    }
+    list.addEventListener("mousedown", onPointerDown);
+    list.addEventListener("touchstart", onPointerDown, { passive: true });
+    document.body.replaceChildren(newPaddedPage(list, newFloatingButton(renderSymbol(plusSymbol, 24, 2.5), () => drawEditActivityPage(), "#1fb141")));
 }
 window.onload = () => __awaiter(void 0, void 0, void 0, function* () {
     activities = [];
