@@ -18,3 +18,8 @@ This repo was developed on the following environment
 
 ## Font
 The font used is [No Continue](https://www.1001fonts.com/no-continue-font.html) by [Gomarice](https://www.1001fonts.com/users/gomarice/)
+
+## Motivation
+I needed an app to keep track of my gym progress. I tried the available
+options, and they all keep asking me to create an account or provide personal
+info. This modern UX is so shit, I had no choice but to create my own.
