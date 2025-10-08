@@ -279,6 +279,10 @@ function drawMainPage() {
     let isDragging = false
     let isPointerDown = false
 
+    function getPointerX(e: MouseEvent | TouchEvent) {
+        return (e instanceof TouchEvent) ? e.touches[0].clientX : e.clientX
+    }
+
     function getPointerY(e: MouseEvent | TouchEvent) {
         return (e instanceof TouchEvent) ? e.touches[0].clientY : e.clientY
     }
@@ -372,7 +376,23 @@ function drawMainPage() {
             return
         }
 
-        drawActivityPage(activities[Number(target.dataset.index)])
+        function isEventInsideElement(el: HTMLElement): boolean {
+            const rect = el.getBoundingClientRect()
+            const x = getPointerX(e)
+            const y = getPointerY(e)
+            return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
+        }
+
+        const index = Number(target.dataset.index)
+        if (isEventInsideElement(target.childNodes[1] as HTMLElement)) {
+            drawEditActivityPage(activities[index])
+        } else if (isEventInsideElement(target.childNodes[2] as HTMLElement)) {
+            activities.splice(index, 1)
+            saveData()
+            drawMainPage()
+        } else {
+            drawActivityPage(activities[index])
+        }
     }
 
     function getDragAfterElement(container: HTMLDivElement, y: number): HTMLDivElement | null {

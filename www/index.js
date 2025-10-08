@@ -187,6 +187,9 @@ function drawMainPage() {
     let draggedItem = null;
     let isDragging = false;
     let isPointerDown = false;
+    function getPointerX(e) {
+        return (e instanceof TouchEvent) ? e.touches[0].clientX : e.clientX;
+    }
     function getPointerY(e) {
         return (e instanceof TouchEvent) ? e.touches[0].clientY : e.clientY;
     }
@@ -261,7 +264,24 @@ function drawMainPage() {
         if (!target) {
             return;
         }
-        drawActivityPage(activities[Number(target.dataset.index)]);
+        function isEventInsideElement(el) {
+            const rect = el.getBoundingClientRect();
+            const x = getPointerX(e);
+            const y = getPointerY(e);
+            return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+        }
+        const index = Number(target.dataset.index);
+        if (isEventInsideElement(target.childNodes[1])) {
+            drawEditActivityPage(activities[index]);
+        }
+        else if (isEventInsideElement(target.childNodes[2])) {
+            activities.splice(index, 1);
+            saveData();
+            drawMainPage();
+        }
+        else {
+            drawActivityPage(activities[index]);
+        }
     }
     function getDragAfterElement(container, y) {
         const items = [...container.querySelectorAll(".activity:not(.dragging)")];
